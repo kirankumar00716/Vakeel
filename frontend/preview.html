@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vakeel - UI Preview</title>
+    <style>
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #3f51b5;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .phone-frame {
+            width: 360px;
+            height: 640px;
+            margin: 20px auto;
+            border: 16px solid #222;
+            border-radius: 36px;
+            overflow: hidden;
+            position: relative;
+            background-color: white;
+        }
+        .app-bar {
+            background-color: #3f51b5;
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .content {
+            padding: 15px;
+        }
+        .query-input {
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 24px;
+            padding: 12px 20px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .query-button {
+            width: 100%;
+            background-color: #3f51b5;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 24px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .response {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            background-color: #f0f0f0;
+        }
+        .tab-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-around;
+            background-color: white;
+            padding: 10px 0;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .tab {
+            text-align: center;
+            cursor: pointer;
+        }
+        .tab.active {
+            color: #3f51b5;
+        }
+        .screen {
+            display: none;
+        }
+        .screen.active {
+            display: block;
+            height: 560px;
+            overflow-y: auto;
+        }
+        .login-form {
+            padding: 20px;
+        }
+        .input-field {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .history-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .profile-section {
+            padding: 15px;
+        }
+        .app-description {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+        .screen-tabs {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+        .screen-tab {
+            padding: 10px 20px;
+            background-color: #ddd;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+        .screen-tab.active {
+            background-color: #3f51b5;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Vakeel - Your Personal Legal Assistant</h1>
+        <p>UI Preview</p>
+    </div>
+    
+    <div class="container">
+        <div class="app-description">
+            <p>This is a preview of how the Vakeel app would look on a mobile device. The actual app is built with Flutter and would have full functionality when connected to the backend API running on port 8080.</p>
+        </div>
+        
+        <div class="screen-tabs">
+            <div class="screen-tab active" onclick="showScreen('login')">Login</div>
+            <div class="screen-tab" onclick="showScreen('home')">Home</div>
+            <div class="screen-tab" onclick="showScreen('history')">History</div>
+            <div class="screen-tab" onclick="showScreen('profile')">Profile</div>
+        </div>
+        
+        <div class="phone-frame">
+            <div class="app-bar">
+                <div class="menu-icon">☰</div>
+                <div class="app-title">Vakeel</div>
+                <div class="more-icon">⋮</div>
+            </div>
+            
+            <div id="login" class="screen active">
+                <div class="content">
+                    <div class="login-form">
+                        <h2>Login</h2>
+                        <input type="text" class="input-field" placeholder="Username">
+                        <input type="password" class="input-field" placeholder="Password">
+                        <button class="query-button">Login</button>
+                        <p style="text-align: center; margin-top: 15px;">Don't have an account? <a href="#">Register</a></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="home" class="screen">
+                <div class="content">
+                    <h3>Ask a legal question</h3>
+                    <input type="text" class="query-input" placeholder="Type your legal question here...">
+                    <button class="query-button">Get Legal Advice</button>
+                    
+                    <div class="response">
+                        <h4>Response</h4>
+                        <p>Regarding your question about property law: This appears to be a matter of property rights. In most jurisdictions, property laws provide protections for homeowners and tenants. I recommend consulting with a real estate attorney who can provide advice tailored to your specific circumstances.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="history" class="screen">
+                <div class="content">
+                    <h3>Your Legal Query History</h3>
+                    <div class="history-item">
+                        <p><strong>Query:</strong> What are my rights as a tenant if my landlord refuses to make necessary repairs?</p>
+                        <p><strong>Category:</strong> Property</p>
+                        <p><strong>Date:</strong> May 24, 2025</p>
+                    </div>
+                    
+                    <div class="history-item">
+                        <p><strong>Query:</strong> Can I sue my employer for wrongful termination?</p>
+                        <p><strong>Category:</strong> Employment</p>
+                        <p><strong>Date:</strong> May 23, 2025</p>
+                    </div>
+                    
+                    <div class="history-item">
+                        <p><strong>Query:</strong> What is the legal process for divorce in my state?</p>
+                        <p><strong>Category:</strong> Family</p>
+                        <p><strong>Date:</strong> May 22, 2025</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="profile" class="screen">
+                <div class="content">
+                    <div class="profile-section">
+                        <h3>User Profile</h3>
+                        <p><strong>Username:</strong> testuser</p>
+                        <p><strong>Email:</strong> test@example.com</p>
+                        <p><strong>Account Created:</strong> May 24, 2025</p>
+                        <p><strong>Queries Made:</strong> 3</p>
+                        <p><strong>Saved Responses:</strong> 1</p>
+                        <button class="query-button" style="margin-top: 20px;">Edit Profile</button>
+                        <button class="query-button" style="margin-top: 10px; background-color: #f44336;">Logout</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-bar">
+                <div class="tab" onclick="showScreen('home')">🏠 Home</div>
+                <div class="tab" onclick="showScreen('history')">📝 History</div>
+                <div class="tab" onclick="showScreen('profile')">👤 Profile</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showScreen(screenId) {
+            // Hide all screens
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            
+            // Show selected screen
+            document.getElementById(screenId).classList.add('active');
+            
+            // Update tab buttons
+            document.querySelectorAll('.screen-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Find the tab with the onclick that matches the screen and activate it
+            document.querySelectorAll('.screen-tab').forEach(tab => {
+                if (tab.getAttribute('onclick').includes(screenId)) {
+                    tab.classList.add('active');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
