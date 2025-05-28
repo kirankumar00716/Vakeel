@@ -119,36 +119,72 @@ class AuthService extends ChangeNotifier {
     notifyListeners();
     
     try {
-      print('Attempting login with API URL: ${_apiService.baseUrl}');
-      
-      // Create form data for token request
-      final formData = FormData.fromMap({
+      print('Attempting login with API URL: ${_apiService.baseUrl}');      // FastAPI OAuth2 expects 'username' and 'password' fields as form data
+      // Create data in the format expected by the backend's OAuth2PasswordRequestForm
+      Map<String, dynamic> formData = {
         'username': username,
         'password': password,
-      });
+      };
         
       // Use Dio directly to avoid token interceptor
       final dio = Dio();
       dio.options.connectTimeout = const Duration(seconds: 10);
       dio.options.receiveTimeout = const Duration(seconds: 15);
       
-      print('Sending login request to: ${_apiService.baseUrl}/token');
+      // Print configuration for debugging
+      print('🔑 LOGIN: Using API URL: ${_apiService.baseUrl}');
+      print('🔑 LOGIN: Sending request to: ${_apiService.baseUrl}/token');
+      print('🔑 LOGIN: With credentials: $username / [HIDDEN]');
       
+      // First check if the API is reachable
+      try {
+        final healthCheck = await dio.get('${_apiService.baseUrl}/health-check');
+        print('🔑 LOGIN: API health check response: ${healthCheck.statusCode} - ${healthCheck.data}');
+      } catch (healthError) {
+        print('🔑 LOGIN: API health check failed: $healthError');
+      }
+      
+      // Send the login request using application/x-www-form-urlencoded format
+      // which is what FastAPI's OAuth2PasswordRequestForm expects
+      print('🔑 LOGIN: Sending token request with form data');
       final response = await dio.post(
         '${_apiService.baseUrl}/token',
         data: formData,
+        options: Options(
+          contentType: 'application/x-www-form-urlencoded',
+          validateStatus: (status) => true, // Accept any status code for debugging
+        ),
       );
+        print('🔑 LOGIN: Response received: ${response.statusCode}');
+      print('🔑 LOGIN: Response data: ${response.data}');
       
-      print('Login response received: ${response.statusCode}');
+      if (response.statusCode != 200) {
+        _errorMessage = 'Login failed: Server returned ${response.statusCode}';
+        if (response.data != null && response.data is Map && response.data['detail'] != null) {
+          _errorMessage = 'Login failed: ${response.data['detail']}';
+        }
+        _isLoading = false;
+        notifyListeners();
+        return false;
+      }
       
       final token = response.data['access_token'];
+      if (token == null) {
+        _errorMessage = 'Login failed: Token not found in response';
+        _isLoading = false;
+        notifyListeners();
+        return false;
+      }
+      
+      print('🔑 LOGIN: Token received, storing token');
       await _storage.write(key: 'access_token', value: token);
       
+      print('🔑 LOGIN: Getting user info');
       await _getCurrentUser();
       _isLoggedIn = true;
       _isLoading = false;
       notifyListeners();
-      return true;    } catch (e) {
+      return true;} catch (e) {
       print('Login error: $e');
       
       if (e is DioException) {

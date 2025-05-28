@@ -1,10 +1,11 @@
 import 'dart:io' show Platform;
 
 class AppConfig {
-  // We're using only one API endpoint as specified
-  static const String _apiBaseUrl = 'http://localhost:8080/api';
+  // Using the network IP directly for all environments
+  // This allows the app to connect from both emulators and physical devices
+  static const String _apiBaseUrl = 'http://192.168.0.227:8080/api';
   
-  // Base URL for API - simply return the hardcoded API URL
+  // Base URL for API
   static String get apiBaseUrl {
     return _apiBaseUrl;
   }

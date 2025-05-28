@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:dio/dio.dart';
 import '../services/auth_service.dart';
+import '../utils/config.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -21,24 +22,29 @@ class _LoginScreenState extends State<LoginScreen> {
     _passwordController.dispose();
     super.dispose();
   }
-  
   // Test API connection to verify server is reachable
   void _testApiConnection() async {
     try {
       final dio = Dio();
       dio.options.connectTimeout = const Duration(seconds: 5);
       
-      final apiUrl = 'http://localhost:8080/api';
-      print('Testing API connection to: $apiUrl');
+      // Get API URL from our config
+      final apiUrl = AppConfig.apiBaseUrl;
+      print('🔌 TEST: API URL from config: $apiUrl');
       
-      // Try to hit a simple endpoint that should always be available
+      // Try to hit the health check endpoint
+      print('🔌 TEST: Trying to connect to: $apiUrl/health-check');
       final response = await dio.get('$apiUrl/health-check');
+      
+      print('🔌 TEST: Response status: ${response.statusCode}');
+      print('🔌 TEST: Response data: ${response.data}');
       
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('API connection successful!'),
+          SnackBar(
+            content: Text('API connection successful! Using: $apiUrl'),
             backgroundColor: Colors.green,
+            duration: const Duration(seconds: 5),
           ),
         );
       } else {
@@ -46,15 +52,17 @@ class _LoginScreenState extends State<LoginScreen> {
           SnackBar(
             content: Text('API returned unexpected status: ${response.statusCode}'),
             backgroundColor: Colors.orange,
+            duration: const Duration(seconds: 5),
           ),
         );
       }
     } catch (e) {
-      print('API connection test failed: $e');
+      print('🔌 TEST: API connection test failed: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Cannot connect to API: ${e is DioException ? e.message : e}'),
+          content: Text('Cannot connect to API: ${e is DioException ? e.message : e.toString()}'),
           backgroundColor: Colors.red,
+          duration: const Duration(seconds: 5),
         ),
       );
     }
