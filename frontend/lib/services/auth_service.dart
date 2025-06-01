@@ -119,9 +119,11 @@ class AuthService extends ChangeNotifier {
     notifyListeners();
     
     try {
-      print('Attempting login with API URL: ${_apiService.baseUrl}');      // FastAPI OAuth2 expects 'username' and 'password' fields as form data
+      print('Attempting login with API URL: ${_apiService.baseUrl}');
+        // FastAPI OAuth2 expects 'username' and 'password' fields as form data
+      // Create form URL encoded data - this is what OAuth2PasswordRequestForm expects in FastAPI
       // Create data in the format expected by the backend's OAuth2PasswordRequestForm
-      Map<String, dynamic> formData = {
+      final formData = {
         'username': username,
         'password': password,
       };
@@ -151,7 +153,7 @@ class AuthService extends ChangeNotifier {
         '${_apiService.baseUrl}/token',
         data: formData,
         options: Options(
-          contentType: 'application/x-www-form-urlencoded',
+          contentType: Headers.formUrlEncodedContentType,
           validateStatus: (status) => true, // Accept any status code for debugging
         ),
       );
